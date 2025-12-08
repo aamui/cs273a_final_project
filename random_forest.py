@@ -17,14 +17,6 @@ def main():
     parser.add_argument('--criterion', type = str, default = 'gini', help = 'Split criterion')
     args = parser.parse_args()
 
-    if torch.cuda.is_available():
-        device = "cuda"
-    elif torch.backends.mps.is_available():
-        device = "mps"
-    else:
-        device = "cpu"
-    print(f"Using device: {device}")
-
     # loading data
     transform = transforms.ToTensor()
     train_dataset = datasets.SVHN(root='./data', split='train', download=True, transform = transform)
@@ -57,9 +49,9 @@ def main():
     X_test_pca = pca.transform(X_test)
 
     clf = RandomForestClassifier(n_estimators = args.n_estimators, criterion = args.criterion)
-    clf.fit(X_train, y_train)
+    clf.fit(X_train_pca, y_train)
 
-    rf_acc = clf.score(X_test, y_test)
+    rf_acc = clf.score(X_test_pca, y_test)
     rf_err = 1. - rf_acc
     print(f'Random forest error on {args.pca_components} PCA components: {rf_err:.3f}')
 
