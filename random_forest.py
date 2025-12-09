@@ -55,6 +55,17 @@ def main():
     clf = RandomForestClassifier(n_estimators = args.n_estimators, criterion = args.criterion, max_depth = args.max_depth)
     clf.fit(X_train_pca, y_train)
 
+    base_clf = RandomForestClassifier(n_estimators = args.n_estimators, criterion = args.criterion, max_depth = args.max_depth)
+    base_clf.fit(X_train, y_train)
+
+    rf_base_train_acc = base_clf.score(X_train, y_train)
+    rf_base_train_err = 1. - rf_base_train_acc
+    print(f'Random forest base train error: {rf_base_train_err:.3f}')
+
+    rf_base_test_acc = base_clf.score(X_test, y_test)
+    rf_base_test_err = 1. - rf_base_test_acc
+    print(f'Random forest base test error: {rf_base_test_err:.3f}')
+
     rf_train_acc = clf.score(X_train_pca, y_train)
     rf_train_err = 1. - rf_train_acc
     print(f'Random forest train error on {args.pca_components} PCA components: {rf_train_err:.3f}')
