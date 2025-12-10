@@ -17,7 +17,7 @@ def main():
     parser.add_argument('--use_subset', action='store_true')
     parser.add_argument('--use_pca', action='store_true')
     parser.add_argument('--subset_size', type=int, default=10000)
-    parser.add_argument("--pca_components", type=int, default=1000, help="Number of PCA components")
+    parser.add_argument("--pca_components", type=int, default=500, help="Number of PCA components")
 
     args = parser.parse_args()
     
