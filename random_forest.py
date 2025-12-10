@@ -7,12 +7,13 @@ from sklearn.decomposition import PCA
 import argparse
 import os
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import LeaveOneOut
 
 
 def main():
     parser = argparse.ArgumentParser(description="Training random forest")
-    parser.add_argument("--batch_size", type=int, default=64, help="Batch size for training")
-    parser.add_argument("--pca_components", type=int, default=100, help="Number of PCA components")
+    parser.add_argument("--batch_size", type=int, default=128, help="Batch size for training")
+    parser.add_argument("--pca_components", type=int, default=1000, help="Number of PCA components")
     parser.add_argument('--n_estimators', type=int, default = 100, help = 'Number of trees in forest')
     parser.add_argument('--criterion', type = str, default = 'gini', help = 'Split criterion')
     parser.add_argument('--max_depth', type = int, default = 15, help = 'Tree max depth')
@@ -51,10 +52,12 @@ def main():
     X_train_pca = pca.fit_transform(X_train)
     X_test_pca = pca.transform(X_test)
 
+    # doing random forest fit on regular flattened data and pca projected
     print('Fitting random forest')
+    # pca proj
     clf = RandomForestClassifier(n_estimators = args.n_estimators, criterion = args.criterion, max_depth = args.max_depth)
     clf.fit(X_train_pca, y_train)
-
+    # base features
     base_clf = RandomForestClassifier(n_estimators = args.n_estimators, criterion = args.criterion, max_depth = args.max_depth)
     base_clf.fit(X_train, y_train)
 
